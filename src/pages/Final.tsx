@@ -1,21 +1,16 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Award, Link2, Loader2, RotateCcw, ShieldCheck, TriangleAlert } from "lucide-react";
+import { Award, Link2, RotateCcw, ShieldCheck, TriangleAlert } from "lucide-react";
 import { Backdrop } from "../components/Backdrop";
 import { Meter, Stat, Tag } from "../components/ui";
 import { useGame } from "../store/useGame";
-import { api } from "../api/client";
 import { SCENES, SCENE_ORDER } from "../../shared/game/content";
 import { CHAIN_LABEL } from "../lib/web3";
-import { cn } from "../lib/utils";
 
 export function Final() {
   const navigate = useNavigate();
   const state = useGame((s) => s.state);
   const reset = useGame((s) => s.reset);
-  const [attest, setAttest] = useState<{ ok: boolean; text: string } | null>(null);
-  const [busy, setBusy] = useState(false);
 
   if (!state) {
     return (
@@ -29,24 +24,6 @@ export function Final() {
   }
 
   const { ending, resources, score } = state;
-
-  const tryAttest = async () => {
-    setBusy(true);
-    setAttest(null);
-    try {
-      const res = await api.attest(state.runId, state.address ?? undefined);
-      setAttest({
-        ok: res.ready,
-        text: res.ready
-          ? `服务端签名完成，成绩摘要 ${res.digest?.slice(0, 12)}…`
-          : res.message ?? "链上登记尚未开放",
-      });
-    } catch (err) {
-      setAttest({ ok: false, text: err instanceof Error ? err.message : "登记失败" });
-    } finally {
-      setBusy(false);
-    }
-  };
 
   return (
     <div className="relative min-h-[calc(100dvh-64px)] overflow-hidden">
@@ -87,24 +64,13 @@ export function Final() {
               <p>正式分数由服务端根据每一关的行动记录计算，前端无法自报得分。</p>
               <p>链上模式只需两次签名：开局创建记录，结束提交成绩。中间的购物、付款都是游戏内模拟。</p>
             </div>
-            <button
-              type="button"
-              onClick={() => void tryAttest()}
-              disabled={busy}
-              className="btn-ghost mt-4 h-10 w-full text-[13px]"
-            >
-              {busy ? <Loader2 size={14} className="animate-spin" /> : <Link2 size={14} />}
-              请求链上成绩凭证
-            </button>
-            {attest ? (
-              <p className={cn("mt-2 rounded-lg border px-3 py-2 text-[12px]", attest.ok ? "border-verify/30 bg-verify/10 text-verify" : "border-amber/30 bg-amber/10 text-amber/90")}>
-                {attest.text}
-              </p>
-            ) : (
-              <p className="mt-2 flex items-center gap-1.5 text-[11px] text-white/25">
-                <TriangleAlert size={11} /> 合约尚未部署到测试网，此按钮会如实返回未开放状态
-              </p>
-            )}
+            <Link to="/wallet" className="btn-primary mt-4 flex h-10 w-full items-center justify-center gap-1.5 text-[13px]">
+              <Link2 size={14} />
+              去链上工作台登记成绩
+            </Link>
+            <p className="mt-2 flex items-center gap-1.5 text-[11px] text-white/25">
+              <TriangleAlert size={11} /> 需要连接钱包，由你在 MetaMask 里确认部署与结算
+            </p>
           </div>
         </div>
 

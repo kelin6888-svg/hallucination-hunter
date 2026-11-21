@@ -1,0 +1,58 @@
+<Slide style={{ width: 1280, height: 720, background: '#07080F', padding: '60px 60px 60px 60px', position: 'relative' }}>
+  <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#F4F5FA', lineHeight: 1.2 }}>AI 的错，通常不像错</Text>
+  <Box style={{ marginTop: 18, width: 1160, height: 1, background: '#22263E' }} />
+
+  <Box style={{ marginTop: 90, flexDirection: 'row', gap: 48 }}>
+    <Box style={{ width: 588 }}>
+      <Box style={{ borderLeft: '2px solid #7C5CFF', paddingLeft: 18 }}>
+        <Text style={{ fontSize: 17, lineHeight: 1.7, color: '#E7E9F5' }}>
+          「这可能是官方备用通道。不想丢票的话，先付了再说。」
+        </Text>
+        <Text style={{ marginTop: 8, fontSize: 12, color: '#6B7190' }}>生活助手 · 14:20 · 语气没有任何犹豫</Text>
+      </Box>
+
+      <Box style={{ marginTop: 26, flexDirection: 'row', gap: 14 }}>
+        <Text style={{ width: 26, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>01</Text>
+        <Box style={{ width: 546 }}>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#F4F5FA' }}>旧做法：读一段回答，圈出有问题的句子</Text>
+          <Text style={{ marginTop: 6, fontSize: 14, lineHeight: 1.7, color: '#A8ADC4' }}>找到就算赢。玩家在答题，不在做决定，也不承担任何后果。</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ marginTop: 20, flexDirection: 'row', gap: 14 }}>
+        <Text style={{ width: 26, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>02</Text>
+        <Box style={{ width: 546 }}>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#F4F5FA' }}>现在：在模拟 App 里点，点完就得付</Text>
+          <Text style={{ marginTop: 6, fontSize: 14, lineHeight: 1.7, color: '#A8ADC4' }}>查订单、查账号、按链接付款，都是真按钮；每一次点击都改时间、资金和任务数。</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ marginTop: 20, flexDirection: 'row', gap: 14 }}>
+        <Text style={{ width: 26, fontSize: 12, color: '#FF7171', fontWeight: 'bold' }}>03</Text>
+        <Box style={{ width: 546 }}>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#F4F5FA' }}>代价写在界面上，不用别人告诉你</Text>
+          <Text style={{ marginTop: 6, fontSize: 14, lineHeight: 1.7, color: '#A8ADC4' }}>点下去的那一刻，顶部资金条从 500 掉到 320，任务停在 0/5，票也没了。</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ marginTop: 28, padding: '14px 18px', background: '#101327', border: '1px solid #22263E', borderRadius: 10 }}>
+        <Text style={{ fontSize: 15, lineHeight: 1.6, color: '#F4F5FA' }}>
+          语法正确、语气自信的错误，<span style={{ color: '#34D399', fontWeight: 'bold' }}>只有代价能让它现形</span>。
+        </Text>
+      </Box>
+    </Box>
+
+    <Box style={{ width: 524 }}>
+      <Box style={{ padding: 8, background: '#0B0D18', border: '1px solid #22263E', borderRadius: 12 }}>
+        <Image src="assets/loss.png" style={{ width: 506, height: 285, borderRadius: 8, objectFit: 'cover' }} />
+      </Box>
+      <Text style={{ marginTop: 12, fontSize: 13, color: '#A8ADC4' }}>真实运行画面：付款成功后，右上角资金 ¥320 并标出 −180</Text>
+      <Text style={{ marginTop: 6, fontSize: 12, lineHeight: 1.7, color: '#6B7190' }}>游戏内全部为模拟数据，不接真实支付、不产生真实扣款。</Text>
+    </Box>
+  </Box>
+
+  <Box style={{ position: 'absolute', top: 670, left: 60, width: 1160, flexDirection: 'row', justifyContent: 'space-between' }}>
+    <Text style={{ fontSize: 14, color: '#4A4F68' }}>▮ 幻觉猎人 · 失控的周六</Text>
+    <Text style={{ fontSize: 14, color: '#4A4F68' }}>02 / 04</Text>
+  </Box>
+</Slide>

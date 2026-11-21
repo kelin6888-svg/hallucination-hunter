@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Clock3, Coins, Link2, Sparkles, TriangleAlert, Wallet } from "lucide-react";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount } from "wagmi";
 import { Backdrop } from "../components/Backdrop";
 import { Logo } from "../components/Logo";
 import { Tag } from "../components/ui";
@@ -16,7 +16,6 @@ export function Landing() {
   const start = useGame((s) => s.start);
   const saved = useGame((s) => s.state);
   const { address, isConnected } = useAccount();
-  const { connectors, connect } = useConnect();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,14 +23,13 @@ export function Landing() {
     setBusy(true);
     setError(null);
     try {
-      if (mode === "chain" && !isConnected) {
-        const connector = connectors[0];
-        if (!connector) throw new Error("没有检测到浏览器钱包");
-        connect({ connector });
+      if (mode === "chain") {
+        // 链上模式必须先部署合约、再用钱包签开局交易，统一到链上工作台
+        navigate("/wallet");
         setBusy(false);
         return;
       }
-      const state = await api.createRun(mode, address);
+      const state = await api.createRun("free", address);
       start(state);
       navigate("/play");
     } catch (err) {

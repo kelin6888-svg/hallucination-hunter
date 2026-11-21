@@ -63,8 +63,26 @@ export const api = {
       body: JSON.stringify({ actions }),
     }),
   attest: (runId: string, address?: string) =>
-    call<{ ready: boolean; message?: string; digest?: string; score?: number }>(
-      `/api/runs/${runId}/attest`,
-      { method: "POST", body: JSON.stringify({ address }) },
-    ),
+    call<{
+      ready: boolean;
+      error?: string;
+      contract?: string;
+      scorer?: string;
+      gameId?: string;
+      score?: number;
+      digest?: string;
+      deadline?: number;
+      signature?: string;
+    }>(`/api/runs/${runId}/attest`, { method: "POST", body: JSON.stringify({ address }) }),
+  chainConfig: () =>
+    call<{
+      chain: { id: number; hexId: string; name: string; rpc: string; explorer: string; faucet: string };
+      contract: string | null;
+      scorer: string;
+    }>("/api/chain/config"),
+  registerContract: (address: string) =>
+    call<{ ok: boolean; contract: string }>("/api/chain/contract", {
+      method: "POST",
+      body: JSON.stringify({ address }),
+    }),
 };

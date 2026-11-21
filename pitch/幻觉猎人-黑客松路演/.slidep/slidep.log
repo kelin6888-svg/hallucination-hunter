@@ -1,0 +1,12 @@
+=== boot pid=58136 ts=2026-11-21 18:33:18.823 cwd=C:\Users\30828\WorkBuddy\spaces\2026_11_18_12-35-13\hallucination-hunter\pitch\幻觉猎人-黑客松路演 argv=C:\Users\30828\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js upsert-dsl 幻觉猎人-黑客松路演.pptx --dsl-file slides/01.slide --page-index 0 ===
+[2026-11-21 18:33:18.821] [INFO ] [pid=58136] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-11-21 18:33:18.857] [INFO ] [pid=58136] [slide-version] fileId=5E685641 version=1 filePath=C:\Users\30828\WorkBuddy\spaces\2026_11_18_12-35-13\hallucination-hunter\pitch\幻觉猎人-黑客松路演\幻觉猎人-黑客松路演.pptx
+=== boot pid=60832 ts=2026-11-21 18:41:04.576 cwd=C:\Users\30828\WorkBuddy\spaces\2026_11_18_12-35-13\hallucination-hunter\pitch\幻觉猎人-黑客松路演 argv=C:\Users\30828\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js upsert-dsl 幻觉猎人-黑客松路演.pptx --dsl-file slides/02.slide ===
+[2026-11-21 18:41:04.575] [INFO ] [pid=60832] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-11-21 18:41:04.615] [INFO ] [pid=60832] [slide-version] fileId=5E685641 version=2 filePath=C:\Users\30828\WorkBuddy\spaces\2026_11_18_12-35-13\hallucination-hunter\pitch\幻觉猎人-黑客松路演\幻觉猎人-黑客松路演.pptx
+=== boot pid=13548 ts=2026-11-21 18:41:51.061 cwd=C:\Users\30828\WorkBuddy\spaces\2026_11_18_12-35-13\hallucination-hunter\pitch\幻觉猎人-黑客松路演 argv=C:\Users\30828\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js upsert-dsl 幻觉猎人-黑客松路演.pptx --dsl-file slides/03.slide ===
+[2026-11-21 18:41:51.060] [INFO ] [pid=13548] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-11-21 18:41:51.130] [INFO ] [pid=13548] [slide-version] fileId=5E685641 version=3 filePath=C:\Users\30828\WorkBuddy\spaces\2026_11_18_12-35-13\hallucination-hunter\pitch\幻觉猎人-黑客松路演\幻觉猎人-黑客松路演.pptx
+=== boot pid=46444 ts=2026-11-21 18:42:29.831 cwd=C:\Users\30828\WorkBuddy\spaces\2026_11_18_12-35-13\hallucination-hunter\pitch\幻觉猎人-黑客松路演 argv=C:\Users\30828\.workbuddy\binaries\node\versions\22.22.2-6\node_modules\@tencent\slidep\dist\index.js upsert-dsl 幻觉猎人-黑客松路演.pptx --dsl-file slides/04.slide ===
+[2026-11-21 18:42:29.830] [INFO ] [pid=46444] [server-url] baseUrl=http://127.0.0.1:39099 source=env
+[2026-11-21 18:42:29.866] [INFO ] [pid=46444] [slide-version] fileId=5E685641 version=4 filePath=C:\Users\30828\WorkBuddy\spaces\2026_11_18_12-35-13\hallucination-hunter\pitch\幻觉猎人-黑客松路演\幻觉猎人-黑客松路演.pptx

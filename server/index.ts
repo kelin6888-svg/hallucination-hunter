@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { randomUUID, createHash } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -17,6 +17,15 @@ import {
   type Resources,
   type SceneId,
 } from "../shared/game/content";
+import {
+  CHAIN,
+  digestOf,
+  gameIdOf,
+  getContract,
+  scorer,
+  setContract,
+  signScore,
+} from "./chain";
 
 const PORT = Number(process.env.PORT ?? 8787);
 
@@ -118,63 +127,93 @@ app.post("/api/runs/:id/scenes/:sceneId", (req, res) => {
   res.json({ outcome, state: summaryOf(run) });
 });
 
-/** 第三阶段：EIP-712 签名 + Monad 上链 */
-app.post("/api/runs/:id/attest", async (req, res) => {
+/* ---------------- Monad 测试网：配置、合约登记、成绩签名 ---------------- */
+
+app.get("/api/chain/config", (_req, res) => {
+  res.json({
+    chain: CHAIN,
+    contract: getContract(),
+    scorer: scorer.address,
+  });
+});
+
+app.post("/api/chain/contract", (req, res) => {
+  try {
+    const address = setContract(String(req.body?.address ?? ""));
+    res.json({ ok: true, contract: address });
+  } catch (err) {
+    res.status(400).json({ error: (err as Error).message });
+  }
+});
+
+app.post("/api/runs/:id/attest", (req, res) => {
   const run = runs.get(req.params.id);
   if (!run) return res.status(404).json({ error: "这一局记录不存在" });
   const summary = summaryOf(run);
   if (!summary.finished) return res.status(400).json({ error: "还没有完成全部关卡" });
 
-  const digest = createHash("sha256")
-    .update([run.id, summary.score, ...summary.scenes.map((s) => `${s.sceneId}:${s.score}`)].join("|"))
-    .digest("hex");
+  const player = String(req.body?.address ?? run.address ?? "");
+  if (!/^0x[0-9a-fA-F]{40}$/.test(player)) {
+    return res.status(400).json({ error: "缺少玩家钱包地址" });
+  }
+  if (run.address && run.address.toLowerCase() !== player.toLowerCase()) {
+    return res.status(403).json({ error: "这一局不是这个钱包开的" });
+  }
 
-  const key = process.env.SCORER_PRIVATE_KEY;
-  const contract = process.env.ATTEST_CONTRACT_ADDRESS;
-  if (!key || !contract) {
-    return res.status(200).json({
+  const digest = digestOf(
+    run.id,
+    summary.score,
+    summary.scenes.map((s) => `${s.sceneId}:${s.score}`),
+  );
+
+  if (!getContract()) {
+    return res.json({
       ready: false,
-      message: "尚未配置签名私钥与合约地址，合约部署后开放",
+      error: "合约尚未部署并登记，请先在链上工作台完成部署",
       digest,
       score: summary.score,
     });
   }
 
   try {
-    const { privateKeyToAccount } = await import("viem/accounts");
-    const account = privateKeyToAccount(key as `0x${string}`);
-    const domain = {
-      name: "HallucinationHunter",
-      version: "1",
-      chainId: 10143,
-      verifyingContract: contract as `0x${string}`,
-    } as const;
-    const types = {
-      Score: [
-        { name: "player", type: "address" },
-        { name: "gameId", type: "bytes32" },
-        { name: "score", type: "uint256" },
-        { name: "digest", type: "bytes32" },
-        { name: "deadline", type: "uint256" },
-      ],
-    } as const;
-    const message = {
-      player: (req.body?.address ?? run.address) as `0x${string}`,
-      gameId: run.id as `0x${string}`,
-      score: BigInt(summary.score),
-      digest: `0x${digest}` as `0x${string}`,
-      deadline: BigInt(Math.floor(Date.now() / 1000) + 3600),
-    };
-    const signature = await account.signTypedData({
-      domain,
-      types,
-      primaryType: "Score",
-      message,
+    const deadline = Math.floor(Date.now() / 1000) + 1800;
+    const signature = signScore({
+      player: player as `0x${string}`,
+      runId: run.id,
+      score: summary.score,
+      digest,
+      deadline,
     });
-    res.json({ ready: true, domain, types, message, signature, digest });
+    res.json({
+      ready: true,
+      chainId: CHAIN.id,
+      contract: getContract(),
+      scorer: scorer.address,
+      gameId: gameIdOf(run.id),
+      score: summary.score,
+      digest,
+      deadline,
+      signature,
+      mode: run.mode,
+    });
   } catch (err) {
     res.status(500).json({ error: (err as Error).message });
   }
+});
+
+app.get("/api/runs/:id/attest", (req, res) => {
+  const run = runs.get(req.params.id);
+  if (!run) return res.status(404).json({ error: "这一局记录不存在" });
+  const summary = summaryOf(run);
+  res.json({
+    runId: run.id,
+    gameId: gameIdOf(run.id),
+    score: summary.score,
+    finished: summary.finished,
+    contract: getContract(),
+    scorer: scorer.address,
+    chainId: CHAIN.id,
+  });
 });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

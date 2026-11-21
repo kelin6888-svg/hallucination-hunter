@@ -6,6 +6,7 @@ import { TopBar } from "./components/TopBar";
 import { Landing } from "./pages/Landing";
 import { Play } from "./pages/Play";
 import { Final } from "./pages/Final";
+import { WalletPage } from "./pages/WalletPage";
 
 function ScrollTop() {
   const { pathname } = useLocation();
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="/" element={<Page><Landing /></Page>} />
             <Route path="/play" element={<Page><Play /></Page>} />
             <Route path="/final" element={<Page><Final /></Page>} />
+            <Route path="/wallet" element={<Page><WalletPage /></Page>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AnimatePresence>

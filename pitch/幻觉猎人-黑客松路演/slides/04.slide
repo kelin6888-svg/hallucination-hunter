@@ -1,0 +1,83 @@
+<Slide style={{ width: 1280, height: 720, background: '#07080F', padding: '60px 60px 60px 60px', position: 'relative' }}>
+  <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#F4F5FA', lineHeight: 1.2 }}>链上只记两次，其余都在游戏里</Text>
+  <Box style={{ marginTop: 18, width: 1160, height: 1, background: '#22263E' }} />
+
+  <Box style={{ marginTop: 26, flexDirection: 'row', gap: 56 }}>
+    <Box style={{ width: 556 }}>
+      <Box style={{ flexDirection: 'row', gap: 12 }}>
+        <Text style={{ width: 22, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>01</Text>
+        <Box style={{ width: 522 }}>
+          <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#F4F5FA' }}>开局一笔交易，记下人和时间</Text>
+          <Text style={{ marginTop: 4, fontSize: 12.5, lineHeight: 1.65, color: '#A8ADC4' }}>startGame(gameId) 绑定钱包地址与开始时间。这是第 1 次 MetaMask 确认。</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ marginTop: 18, flexDirection: 'row', gap: 12 }}>
+        <Text style={{ width: 22, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>02</Text>
+        <Box style={{ width: 522 }}>
+          <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#F4F5FA' }}>五幕全程链下，不打扰玩家</Text>
+          <Text style={{ marginTop: 4, fontSize: 12.5, lineHeight: 1.65, color: '#A8ADC4' }}>购物车、付款、预算都是模拟数据，不接真实支付，也不会弹出第二次钱包。</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ marginTop: 18, flexDirection: 'row', gap: 12 }}>
+        <Text style={{ width: 22, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>03</Text>
+        <Box style={{ width: 522 }}>
+          <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#F4F5FA' }}>服务端按行动重算，再签 EIP-712</Text>
+          <Text style={{ marginTop: 4, fontSize: 12.5, lineHeight: 1.65, color: '#A8ADC4' }}>签名绑定玩家、gameId、分数、成绩摘要、截止时间、链号与合约地址；前端改不了分。</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ marginTop: 18, flexDirection: 'row', gap: 12 }}>
+        <Text style={{ width: 22, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>04</Text>
+        <Box style={{ width: 522 }}>
+          <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#F4F5FA' }}>结算校验签名，杜绝重复刷分</Text>
+          <Text style={{ marginTop: 4, fontSize: 12.5, lineHeight: 1.65, color: '#A8ADC4' }}>submitScore 校验签名、拒绝同一局重复写入、分数上限 500，并可查询历史最高分。</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ marginTop: 26, flexDirection: 'row', gap: 8 }}>
+        <Box style={{ padding: '6px 10px', background: '#101327', border: '1px solid #22263E', borderRadius: 6 }}>
+          <Text style={{ fontSize: 11.5, color: '#A8ADC4' }}>合约已编译</Text>
+        </Box>
+        <Box style={{ padding: '6px 10px', background: '#101327', border: '1px solid #22263E', borderRadius: 6 }}>
+          <Text style={{ fontSize: 11.5, color: '#A8ADC4' }}>测试 9 / 9 通过</Text>
+        </Box>
+        <Box style={{ padding: '6px 10px', background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.30)', borderRadius: 6 }}>
+          <Text style={{ fontSize: 11.5, color: '#34D399' }}>部署与结算由你的钱包签名</Text>
+        </Box>
+      </Box>
+    </Box>
+
+    <Box style={{ width: 544 }}>
+      <Text style={{ fontSize: 11, letterSpacing: 1.6, color: '#6B7190' }}>三分钟演示节奏</Text>
+
+      <Box style={{ marginTop: 14, flexDirection: 'row', alignItems: 'flex-start', gap: 14 }}>
+        <Text style={{ width: 78, fontSize: 12, color: '#7C5CFF' }}>0:00—0:40</Text>
+        <Text style={{ width: 452, fontSize: 13, lineHeight: 1.6, color: '#E7E9F5' }}>先故意点「按链接付款」，让观众看资金条从 500 掉到 320</Text>
+      </Box>
+      <Box style={{ marginTop: 10, flexDirection: 'row', alignItems: 'flex-start', gap: 14 }}>
+        <Text style={{ width: 78, fontSize: 12, color: '#7C5CFF' }}>0:40—1:50</Text>
+        <Text style={{ width: 452, fontSize: 13, lineHeight: 1.6, color: '#E7E9F5' }}>重开这一关，查订单、查账号、回官方下单，同一关拿到 100 分</Text>
+      </Box>
+      <Box style={{ marginTop: 10, flexDirection: 'row', alignItems: 'flex-start', gap: 14 }}>
+        <Text style={{ width: 78, fontSize: 12, color: '#34D399' }}>1:50—2:30</Text>
+        <Text style={{ width: 452, fontSize: 13, lineHeight: 1.6, color: '#E7E9F5' }}>第 5 幕 AI 全对：过度核实反而会错过末班车</Text>
+      </Box>
+      <Box style={{ marginTop: 10, flexDirection: 'row', alignItems: 'flex-start', gap: 14 }}>
+        <Text style={{ width: 78, fontSize: 12, color: '#7C5CFF' }}>2:30—3:00</Text>
+        <Text style={{ width: 452, fontSize: 13, lineHeight: 1.6, color: '#E7E9F5' }}>结算页看结局，再去链上工作台提交真实成绩</Text>
+      </Box>
+
+      <Box style={{ marginTop: 18, padding: 6, background: '#0B0D18', border: '1px solid #22263E', borderRadius: 10 }}>
+        <Image src="assets/final.png" style={{ width: 530, height: 298, borderRadius: 6, objectFit: 'cover' }} />
+      </Box>
+      <Text style={{ marginTop: 10, fontSize: 12, color: '#6B7190' }}>真实结算画面：500 分 · 高效协作者 · 148 分钟 · ¥267</Text>
+    </Box>
+  </Box>
+
+  <Box style={{ position: 'absolute', top: 670, left: 60, width: 1160, flexDirection: 'row', justifyContent: 'space-between' }}>
+    <Text style={{ fontSize: 14, color: '#4A4F68' }}>▮ 幻觉猎人 · 失控的周六</Text>
+    <Text style={{ fontSize: 14, color: '#4A4F68' }}>04 / 04</Text>
+  </Box>
+</Slide>

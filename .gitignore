@@ -8,3 +8,11 @@ artifacts
 cache
 typechain-types
 coverage
+.chain/
+
+# 演示物料中间产物
+pitch/promo/*.wav
+pitch/promo/preview-*.png
+pitch/promo/still-*.png
+pitch/promo/frames/
+.vite-cache

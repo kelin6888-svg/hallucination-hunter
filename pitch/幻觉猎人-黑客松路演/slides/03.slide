@@ -1,0 +1,72 @@
+<Slide style={{ width: 1280, height: 720, background: '#07080F', padding: '60px 60px 60px 60px', position: 'relative' }}>
+  <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#F4F5FA', lineHeight: 1.2 }}>五幕，五种操作，一个代价</Text>
+  <Box style={{ marginTop: 18, width: 1160, height: 1, background: '#22263E' }} />
+
+  <Box style={{ marginTop: 22, flexDirection: 'row', alignItems: 'center' }}>
+    <Text style={{ width: 44, fontSize: 11, color: '#4A4F68' }}>序号</Text>
+    <Text style={{ width: 150, fontSize: 11, color: '#4A4F68' }}>场景</Text>
+    <Text style={{ width: 452, fontSize: 11, color: '#4A4F68' }}>你能做的操作</Text>
+    <Text style={{ width: 330, fontSize: 11, color: '#4A4F68' }}>AI 这次错在哪</Text>
+    <Text style={{ width: 184, fontSize: 11, color: '#4A4F68' }}>代价</Text>
+  </Box>
+
+  <Box style={{ marginTop: 8 }}>
+    <Box style={{ flexDirection: 'row', alignItems: 'center', height: 38, borderTop: '1px solid #191C2E' }}>
+      <Text style={{ width: 44, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>01</Text>
+      <Text style={{ width: 150, fontSize: 15, color: '#F4F5FA' }}>抢票危机</Text>
+      <Text style={{ width: 452, fontSize: 13, color: '#A8ADC4' }}>查订单 · 查账号 · 按链接付款 · 回官方重下</Text>
+      <Text style={{ width: 330, fontSize: 13, color: '#FF7171' }}>把陌生私聊链接说成官方备用通道</Text>
+      <Text style={{ width: 184, fontSize: 13, color: '#A8ADC4' }}>最高 −180 元</Text>
+    </Box>
+
+    <Box style={{ flexDirection: 'row', alignItems: 'center', height: 38, borderTop: '1px solid #191C2E' }}>
+      <Text style={{ width: 44, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>02</Text>
+      <Text style={{ width: 150, fontSize: 15, color: '#F4F5FA' }}>预算保卫战</Text>
+      <Text style={{ width: 452, fontSize: 13, color: '#A8ADC4' }}>加减商品 · 开关优惠券 · 看规则 · 结算</Text>
+      <Text style={{ width: 330, fontSize: 13, color: '#FF7171' }}>把 66 元算成 56 元，还说在预算内</Text>
+      <Text style={{ width: 184, fontSize: 13, color: '#A8ADC4' }}>超支 6 元</Text>
+    </Box>
+
+    <Box style={{ flexDirection: 'row', alignItems: 'center', height: 38, borderTop: '1px solid #191C2E' }}>
+      <Text style={{ width: 44, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>03</Text>
+      <Text style={{ width: 150, fontSize: 15, color: '#F4F5FA' }}>消失的快递</Text>
+      <Text style={{ width: 452, fontSize: 13, color: '#A8ADC4' }}>看完整轨迹 · 看地图 · 打电话问站 · 去门口</Text>
+      <Text style={{ width: 330, fontSize: 13, color: '#FF7171' }}>把「已发出」推断成「已到小区」</Text>
+      <Text style={{ width: 184, fontSize: 13, color: '#A8ADC4' }}>白跑 14 分钟</Text>
+    </Box>
+
+    <Box style={{ flexDirection: 'row', alignItems: 'center', height: 38, borderTop: '1px solid #191C2E' }}>
+      <Text style={{ width: 44, fontSize: 12, color: '#7C5CFF', fontWeight: 'bold' }}>04</Text>
+      <Text style={{ width: 150, fontSize: 15, color: '#F4F5FA' }}>不存在的规则</Text>
+      <Text style={{ width: 452, fontSize: 13, color: '#A8ADC4' }}>翻活动页 · 数条款 · 问工作人员 · 直接交钱</Text>
+      <Text style={{ width: 330, fontSize: 13, color: '#FF7171' }}>编造「须知第七条」额外收 50 元</Text>
+      <Text style={{ width: 184, fontSize: 13, color: '#A8ADC4' }}>最高 −50 元</Text>
+    </Box>
+
+    <Box style={{ flexDirection: 'row', alignItems: 'center', height: 38, borderTop: '1px solid #191C2E', borderBottom: '1px solid #191C2E' }}>
+      <Text style={{ width: 44, fontSize: 12, color: '#34D399', fontWeight: 'bold' }}>05</Text>
+      <Text style={{ width: 150, fontSize: 15, color: '#F4F5FA' }}>最后的信任</Text>
+      <Text style={{ width: 452, fontSize: 13, color: '#A8ADC4' }}>直接出发 · 核对一次 · 反复核实</Text>
+      <Text style={{ width: 330, fontSize: 13, color: '#34D399' }}>这次完全正确，不该硬找错</Text>
+      <Text style={{ width: 184, fontSize: 13, color: '#A8ADC4' }}>多查一次就错过班车</Text>
+    </Box>
+  </Box>
+
+  <Box style={{ marginTop: 16, height: 38, flexDirection: 'row', alignItems: 'center', paddingLeft: 12, paddingRight: 12, background: '#101327', border: '1px solid #22263E', borderRadius: 8 }}>
+    <Text style={{ fontSize: 13, color: '#A8ADC4' }}>
+      关键决策 <span style={{ color: '#F4F5FA', fontWeight: 'bold' }}>50</span>　+　有效核实 <span style={{ color: '#F4F5FA', fontWeight: 'bold' }}>30</span>　+　时间与资源 <span style={{ color: '#F4F5FA', fontWeight: 'bold' }}>20</span>
+    </Text>
+    <Text style={{ marginLeft: 'auto', fontSize: 13, color: '#34D399' }}>单关 100 · 总分 500 · 不止一条路线能拿满分</Text>
+  </Box>
+
+  <Box style={{ marginTop: 16, flexDirection: 'row', gap: 40 }}>
+    <Image src="assets/budget.png" style={{ width: 360, height: 202, borderRadius: 8, objectFit: 'cover', border: '1px solid #22263E' }} />
+    <Image src="assets/parcel.png" style={{ width: 360, height: 202, borderRadius: 8, objectFit: 'cover', border: '1px solid #22263E' }} />
+    <Image src="assets/final.png" style={{ width: 360, height: 202, borderRadius: 8, objectFit: 'cover', border: '1px solid #22263E' }} />
+  </Box>
+
+  <Box style={{ position: 'absolute', top: 670, left: 60, width: 1160, flexDirection: 'row', justifyContent: 'space-between' }}>
+    <Text style={{ fontSize: 14, color: '#4A4F68' }}>▮ 幻觉猎人 · 失控的周六</Text>
+    <Text style={{ fontSize: 14, color: '#4A4F68' }}>03 / 04</Text>
+  </Box>
+</Slide>

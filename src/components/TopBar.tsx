@@ -1,10 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { Unplug, Volume2, VolumeX, Wallet } from "lucide-react";
+import { useAccount } from "wagmi";
+import { Volume2, VolumeX, Wallet } from "lucide-react";
 import { Logo } from "./Logo";
 import { Tag } from "./ui";
 import { useGame } from "../store/useGame";
-import { shortAddress } from "../lib/utils";
+import { cn, shortAddress } from "../lib/utils";
 import { CHAIN_LABEL } from "../lib/web3";
 
 export function TopBar() {
@@ -13,8 +13,6 @@ export function TopBar() {
   const muted = useGame((s) => s.muted);
   const setMuted = useGame((s) => s.setMuted);
   const { address, isConnected } = useAccount();
-  const { connectors, connect, isPending } = useConnect();
-  const { disconnect } = useDisconnect();
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-ink-950/75 backdrop-blur-xl">
@@ -45,34 +43,19 @@ export function TopBar() {
           >
             {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
           </button>
-          {isConnected && address ? (
-            <span className="inline-flex items-center gap-2">
-              <span className="rounded-lg border border-verify/25 bg-verify/[0.08] px-2 py-1.5 font-mono text-[10px] text-verify">
-                {shortAddress(address)}
-              </span>
-              <button
-                type="button"
-                onClick={() => disconnect()}
-                className="rounded-lg border border-white/10 p-1.5 text-white/40 hover:border-alarm/30 hover:text-alarm"
-                aria-label="断开钱包"
-              >
-                <Unplug size={13} />
-              </button>
-            </span>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                const c = connectors[0];
-                if (c) connect({ connector: c });
-              }}
-              disabled={isPending}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-violet-400/25 bg-violet-500/10 px-2.5 py-1.5 text-[11px] text-violet-200 hover:bg-violet-500/20 disabled:opacity-40"
-            >
-              <Wallet size={12} />
-              {isPending ? "连接中" : "连接钱包"}
-            </button>
-          )}
+          <Link
+            to="/wallet"
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-mono text-[11px] transition",
+              isConnected
+                ? "border-verify/25 bg-verify/[0.08] text-verify hover:bg-verify/[0.14]"
+                : "border-violet-400/25 bg-violet-500/10 text-violet-200 hover:bg-violet-500/20",
+            )}
+            title="打开链上工作台"
+          >
+            <Wallet size={12} />
+            {isConnected && address ? shortAddress(address) : "连接钱包"}
+          </Link>
         </div>
       </div>
     </header>

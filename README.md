@@ -46,25 +46,58 @@ npm run contract:test     # 合约测试（9 项）
 node scripts/playthrough.mjs   # 浏览器实际操作五关并校验分数/结局
 ```
 
-## Monad 接入
+## Monad 接入（真实可用）
 
-- 链：Monad 测试网（chainId 10143），钱包用 wagmi + viem（injected）。
-- 两种入口：**免费体验**（无需钱包，标明未上链）与**链上模式**（连接钱包后开局）。
-- 游玩过程全程链下，只有开局与结算各一次签名；游戏内购物/付款均为模拟，不触发真实交易。
-- 合约：`contracts/HallucinationHunter.sol`
-  - `startGame(gameId)` 记录开局与玩家地址
-  - `submitScore(gameId, score, digest, deadline, signature)` 校验 EIP-712 签名后写入成绩
-  - EIP-712 域绑定 `name/version/chainId/verifyingContract`，消息绑定 `player/gameId/score/digest/deadline`
-  - 已结算不可重复提交；分数上限 500；仅玩家本人可结算；owner 可更换签名地址
-  - 查询：`getGame`、`gamesOf`、`gameCount`、`bestScore`
-- 服务端 `/api/runs/:id/attest` 生成成绩摘要并（配置私钥后）返回 EIP-712 签名。**当前未配置部署私钥与合约地址，接口如实返回「未开放」，页面不显示任何伪造交易哈希。**
+链：**Monad Testnet**（chainId `10143` / `0x279f`，货币 MON，RPC `https://testnet-rpc.monad.xyz`，浏览器 `https://testnet.monadvision.com`，水龙头 `https://faucet.monad.xyz`）。
 
-部署步骤（需要你自己完成，因为没有部署私钥与测试币）：
+两种入口：
+- **免费体验**：不连钱包，五幕可完整游玩，成绩只存在本地/服务端，页面标明未上链。
+- **链上模式**：从「连接钱包」进入 **/wallet 链上工作台**，四步走完就完成真实上链。
+
+### 链上工作台怎么用（全过程由 MetaMask 确认，私钥不进代码）
+
+1. 打开 http://127.0.0.1:4176/wallet
+2. 点「连接 MetaMask」→ 在钱包弹窗点「连接」
+3. 网络不对时点「切换到 Monad 测试网」→ 钱包弹窗会提示添加/切换网络（chainId 10143）
+4. 余额为 0 时先去 https://faucet.monad.xyz 领测试 MON
+5. 点「部署合约」→ 钱包弹窗确认**一笔合约创建交易**，用途：部署成绩记录合约（构造参数是服务端评分签名地址）
+6. 确认后页面显示合约地址，并自动登记到服务端 `.chain/contract.json`
+7. 点「开局并开始游戏」→ 钱包确认**第二笔交易**，用途：`startGame(gameId)` 记录玩家地址与开局时间，然后进入五幕
+8. 玩完五幕回到 /wallet，点「提交并上链」→ 服务端按行动重算分数并签 EIP-712，你在钱包里确认 `submitScore`
+9. 页面读回 `getGame` 显示链上玩家、状态、分数与摘要，附区块浏览器链接
+
+页面上的每个动作都有独立状态：**等待钱包签名 / 已提交等待确认 / 已确认 / 失败（含原因）**。
+
+### 合约
+
+`contracts/HallucinationHunter.sol`（Solidity 0.8.24）
+
+- `startGame(bytes32 gameId)`：记录玩家、开局时间，同一 gameId 不能重复开
+- `submitScore(gameId, score, digest, deadline, signature)`：校验 EIP-712 签名后写入成绩
+- EIP-712 域：`name=HallucinationHunter, version=1, chainId, verifyingContract`
+- 消息：`player / gameId / score / digest / deadline`
+- 已结算不可重复提交、分数上限 500、仅玩家本人可结算、owner 可更换签名地址
+- 查询：`getGame` / `gamesOf` / `gameCount` / `bestScore`
+
+服务端入口：
+- `GET /api/chain/config`：链参数、合约地址、评分签名地址
+- `POST /api/chain/contract`：登记部署后的合约地址
+- `POST /api/runs/:id/attest`：校验玩家与局号，按行动重算分数并返回 EIP-712 签名
+
+评分签名密钥：优先读 `SCORER_PRIVATE_KEY`，否则自动生成并保存在 `.chain/scorer.json`（已 gitignore）。它只用于签成绩，和你的钱包私钥无关。
+
+合约测试：
 
 ```bash
-cp .env.example .env      # 填入 DEPLOYER_PRIVATE_KEY、SCORER_ADDRESS
-npm run contract:deploy   # 输出合约地址
-# 再把合约地址填进 .env 的 ATTEST_CONTRACT_ADDRESS 与前端 src/lib/web3.ts
+npm run contract:test      # 9 项：开局 / 正常结算 / 重复结算 / 伪造签名 / 越权 / 超分 / 过期 / 换签名者 / 未开局
+npx tsx scripts/chain-sign-check.ts   # 校验服务端签名可恢复为签名者地址
+```
+
+可选：不用浏览器也能部署（需要私钥，不推荐在公用机器上用）
+
+```bash
+cp .env.example .env       # 填 DEPLOYER_PRIVATE_KEY 与 SCORER_ADDRESS
+npm run contract:deploy
 ```
 
 ## 结构与判定
@@ -74,6 +107,9 @@ shared/game/content.ts   场景文案、动作、商品与规则常量
 shared/game/rules.ts     确定性规则：每个场景的结算、购物车金额、结局判定
 server/index.ts          局记录、逐关提交、服务端重算、EIP-712 签名入口
 src/pages/Play.tsx       手机界面 + 资源条 + 结算抽屉
+src/pages/WalletPage.tsx 链上工作台：连接 / 部署 / 开局 / 交成绩
+src/chain/artifact.ts    合约 ABI 与字节码（由 artifacts 生成）
+server/chain.ts          评分签名密钥、合约登记、EIP-712 签名
 src/game/Scenes.tsx      五个模拟 App 的界面
 contracts/               成绩记录合约
 test/contract.test.cjs   合约测试
@@ -84,6 +120,7 @@ tests/game.test.ts       规则测试
 
 ## 已知边界
 
-1. 合约已编译并通过 9 项测试，**未部署**（缺私钥/测试币），前端不显示假交易。
+1. 合约已编译并通过 9 项测试；**是否已部署取决于你是否在 /wallet 点过部署**，页面不会伪造地址或交易哈希。
 2. 局记录保存在服务端内存，服务重启后旧局失效（前端会回首页重新开始）。
-3. 链上模式的钱包签名流程已接好钱包连接与开局记录，正式上链需先完成部署与地址配置。
+3. 链上模式必须先在 /wallet 完成部署，再开局；未部署时「开局」按钮不可用。
+4. 演示物料在 `pitch/`：`幻觉猎人-黑客松路演.pptx`（4 页）、`VIDEO-60s.md`（60 秒分镜）、`promo/hallucination-hunter-60s.mp4`（成片）。

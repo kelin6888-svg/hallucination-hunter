@@ -32,6 +32,11 @@ export function Play() {
     [sceneId, actions, resources],
   );
 
+  /* 场景进行中即时反映代价：服务端结算时会用同一份规则重算，数值一致 */
+  const live = preview.resources;
+  const deltaMoney = live.money - resources.money;
+  const deltaTime = live.time - resources.time;
+
   useEffect(() => {
     setActions([]);
   }, [sceneId]);
@@ -84,16 +89,36 @@ export function Play() {
             失控的周六 · 第 {meta.order} / 5 件事
           </span>
           <div className="ml-auto flex items-center gap-4 font-mono text-[12px]">
-            <span className="inline-flex items-center gap-1.5 text-white/70">
+            <span
+              className={cn(
+                "inline-flex items-center gap-1.5 transition-colors",
+                deltaTime < 0 ? "text-violet-200" : "text-white/70",
+              )}
+            >
               <Clock3 size={13} className="text-violet-300/70" />
-              剩余 {Math.max(0, state.resources.time)} 分钟
+              剩余 {Math.max(0, live.time)} 分钟
+              {deltaTime < 0 ? (
+                <em className="rounded bg-violet-500/15 px-1 text-[10px] not-italic text-violet-200">
+                  {deltaTime}
+                </em>
+              ) : null}
             </span>
-            <span className="inline-flex items-center gap-1.5 text-white/70">
-              <Coins size={13} className="text-amber/80" />¥{state.resources.money}
+            <span
+              className={cn(
+                "inline-flex items-center gap-1.5 transition-colors",
+                deltaMoney < 0 ? "text-amber" : "text-white/70",
+              )}
+            >
+              <Coins size={13} className="text-amber/80" />¥{live.money}
+              {deltaMoney < 0 ? (
+                <em className="rounded bg-alarm/15 px-1 text-[10px] not-italic text-alarm">
+                  {deltaMoney}
+                </em>
+              ) : null}
             </span>
             <span className="inline-flex items-center gap-1.5 text-white/70">
               <ListChecks size={13} className="text-verify/80" />
-              {state.resources.tasks}/5
+              {live.tasks}/5
             </span>
           </div>
           <div className="hidden gap-1 sm:flex">

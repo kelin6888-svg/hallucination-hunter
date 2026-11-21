@@ -1,18 +1,18 @@
 import { createConfig, http } from "wagmi";
-import { defineChain } from "viem";
-import { injected } from "wagmi/connectors";
+import { defineChain, type Address } from "viem";
+import { injected, metaMask } from "wagmi/connectors";
 
-/** Monad 测试网，第三阶段用于成绩登记合约 */
+/** Monad 测试网（chainId 10143 / 0x279f） */
 export const monadTestnet = defineChain({
   id: 10143,
-  name: "Monad 测试网",
+  name: "Monad Testnet",
   nativeCurrency: { name: "Monad", symbol: "MON", decimals: 18 },
   rpcUrls: {
     default: { http: ["https://testnet-rpc.monad.xyz"] },
   },
   blockExplorers: {
     default: {
-      name: "Monad 区块浏览器",
+      name: "Monad Vision",
       url: "https://testnet.monadvision.com",
     },
   },
@@ -21,14 +21,26 @@ export const monadTestnet = defineChain({
 
 export const CHAIN_LABEL = "Monad 测试网";
 export const CHAIN_ID = monadTestnet.id;
+export const EXPLORER = "https://testnet.monadvision.com";
+export const FAUCET = "https://faucet.monad.xyz";
 
-/** 成绩登记合约地址：第三阶段部署后填入 */
-export const ATTEST_CONTRACT_ADDRESS =
-  "0x0000000000000000000000000000000000000000" as const;
+const STORE_KEY = "hh-contract-address";
+
+/** 合约地址：环境变量优先，其次用链上工作台部署后记在本地 */
+export function getContractAddress(): Address | null {
+  const env = (import.meta.env.VITE_ATTEST_CONTRACT ?? "").trim();
+  if (/^0x[0-9a-fA-F]{40}$/.test(env)) return env as Address;
+  const saved = localStorage.getItem(STORE_KEY) ?? "";
+  return /^0x[0-9a-fA-F]{40}$/.test(saved) ? (saved as Address) : null;
+}
+
+export function setContractAddress(address: Address) {
+  localStorage.setItem(STORE_KEY, address);
+}
 
 export const wagmiConfig = createConfig({
   chains: [monadTestnet],
-  connectors: [injected({ shimDisconnect: true })],
+  connectors: [metaMask(), injected({ shimDisconnect: true })],
   transports: {
     [monadTestnet.id]: http("https://testnet-rpc.monad.xyz"),
   },
