@@ -1,0 +1,14 @@
+import puppeteer from "puppeteer-core";
+const b = await puppeteer.launch({ executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe", headless: "new", args: ["--disable-gpu", "--hide-scrollbars"] });
+const p = await b.newPage();
+await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
+await p.goto("http://127.0.0.1:4176/", { waitUntil: "networkidle2" });
+await p.evaluate(() => localStorage.clear());
+await p.reload({ waitUntil: "networkidle2" });
+await p.screenshot({ path: "shots/30-mobile-landing.png" });
+await p.evaluate(() => [...document.querySelectorAll("button")].find((x) => x.textContent.includes("免费体验"))?.click());
+await new Promise((r) => setTimeout(r, 1200));
+await p.screenshot({ path: "shots/31-mobile-play.png", fullPage: false });
+const overflow = await p.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+console.log("横向溢出：", overflow, "px");
+await b.close();
