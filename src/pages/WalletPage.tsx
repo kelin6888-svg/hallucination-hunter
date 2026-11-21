@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
@@ -146,6 +146,8 @@ export function WalletPage() {
   const [startTx, setStartTx] = useState<TxState>(IDLE);
   const [submitTx, setSubmitTx] = useState<TxState>(IDLE);
   const [connectError, setConnectError] = useState<string | null>(null);
+  const [connecting, setConnecting] = useState(false);
+  const connectingRef = useRef(false);
   const [onChain, setOnChain] = useState<{
     player: string;
     score: number;
@@ -211,23 +213,55 @@ export function WalletPage() {
     }
   }, [chainId, switchChainAsync, walletClient]);
 
+  /* MetaMask 同一来源同时只允许一个权限请求，这里做去重，避免重复弹出 */
   const connectWallet = async () => {
+    if (connectingRef.current) return;
     setConnectError(null);
-    const injectedReady = typeof window !== "undefined" && Boolean((window as { ethereum?: unknown }).ethereum);
-    // 桌面浏览器装了 MetaMask 时，直接用注入的 provider，避免走 SDK 弹窗
+
+    const injectedReady =
+      typeof window !== "undefined" && Boolean((window as { ethereum?: unknown }).ethereum);
     const preferred = injectedReady
-      ? (connectors.find((c) => c.id === "injected") ?? connectors.find((c) => c.id === "metaMask") ?? connectors[0])
+      ? (connectors.find((c) => c.id === "injected") ??
+        connectors.find((c) => c.id === "metaMask") ??
+        connectors[0])
       : (connectors.find((c) => c.id === "metaMask") ?? connectors[0]);
     if (!preferred) {
       setConnectError("没有检测到浏览器钱包。请先安装 MetaMask 后刷新页面。");
       return;
     }
+
+    if (!injectedReady) {
+      setConnectError(
+        "这个浏览器没有注入钱包对象，无法连接。请把 http://127.0.0.1:4176/wallet 复制到装了 MetaMask 的 Chrome 或 Edge 打开。",
+      );
+      return;
+    }
+
+    connectingRef.current = true;
+    setConnecting(true);
     try {
       await connectAsync({ connector: preferred });
     } catch (err) {
-      setConnectError((err as Error).message || "钱包拒绝了连接");
+      const e = err as { code?: number; message?: string };
+      const msg = e.message ?? "";
+      if (e.code === -32002 || /already pending|already processing/i.test(msg)) {
+        setConnectError(
+          "MetaMask 里已经有一个待确认的连接请求。点浏览器右上角的 MetaMask 图标，把那个弹窗处理掉（连接或取消），再点这里的按钮。",
+        );
+      } else if (e.code === 4001 || /reject|denied|User rejected/i.test(msg)) {
+        setConnectError("你在钱包里取消了连接，再点一次即可。");
+      } else {
+        setConnectError(msg || "钱包拒绝了连接");
+      }
+    } finally {
+      connectingRef.current = false;
+      setConnecting(false);
     }
   };
+
+  useEffect(() => {
+    if (isConnected) setConnectError(null);
+  }, [isConnected]);
 
   const deploy = async () => {
     if (!walletClient || !address || !config) return;
@@ -415,15 +449,36 @@ export function WalletPage() {
           <Step index={1} title="连接钱包" desc="用 MetaMask 连接，只读取公开地址与余额。私钥、助记词始终留在钱包里。" done={isConnected}>
             {!isConnected ? (
               <div className="flex flex-wrap items-center gap-2">
-                <button type="button" onClick={connectWallet} disabled={isPending} className={btnPrimary}>
-                  <Wallet size={13} />
-                  {isPending ? "等待钱包确认…" : "连接 MetaMask"}
+                <button
+                  type="button"
+                  onClick={connectWallet}
+                  disabled={isPending || connecting}
+                  className={btnPrimary}
+                >
+                  {isPending || connecting ? <Loader2 size={13} className="animate-spin" /> : <Wallet size={13} />}
+                  {isPending || connecting ? "等待钱包确认…" : "连接 MetaMask"}
                 </button>
                 <a href="https://metamask.io/download/" target="_blank" rel="noreferrer" className={btnGhost}>
                   没装钱包？下载
                   <ExternalLink size={11} />
                 </a>
-                {connectError ? <span className="text-[12px] text-alarm">{connectError}</span> : null}
+                {connectError ? (
+                  <div className="w-full rounded-lg border border-alarm/30 bg-alarm/[0.07] px-3 py-2">
+                    <p className="text-[12px] leading-relaxed text-alarm">{connectError}</p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <button type="button" onClick={connectWallet} className={btnGhost}>
+                        重新尝试
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => window.location.reload()}
+                        className={btnGhost}
+                      >
+                        刷新页面
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : (
               <div className="flex flex-wrap items-center gap-2">
