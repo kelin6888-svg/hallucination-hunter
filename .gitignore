@@ -16,3 +16,5 @@ pitch/promo/preview-*.png
 pitch/promo/still-*.png
 pitch/promo/frames/
 .vite-cache
+pitch/.slidep/
+pitch/**/.slidep/
